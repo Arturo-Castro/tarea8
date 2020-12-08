@@ -47,6 +47,11 @@ function validacionFormulario(event){
         'descripcion-regalo': errorDescripcionRegalo,
     }
     
+    const arrayLi = document.querySelectorAll('#errores li');
+    arrayLi.forEach(function(li){
+        li.remove();
+    });
+
     const esExito = manejarErrores(errores) === 0;
 
     if (esExito){
