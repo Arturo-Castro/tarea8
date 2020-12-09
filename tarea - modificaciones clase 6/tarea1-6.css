@@ -1,0 +1,20 @@
+#contenedor-botones{
+    margin: 2% 26%;
+}
+
+#contenedor1 {
+    position: absolute;
+    top: 0%;
+} 
+
+#contenedor2 {
+    position: absolute;
+    top: 0%;
+    left: 12%;
+}
+
+#contenedor-texto {
+    width: 20%;
+    margin: 230px auto;
+    font-size: 20px;
+}
