@@ -2,12 +2,12 @@
     margin: 2% 26%;
 }
 
-#contenedor1 {
+#contenedor-edades {
     position: absolute;
     top: 0%;
 } 
 
-#contenedor2 {
+#contenedor-salarios {
     position: absolute;
     top: 0%;
     left: 12%;
