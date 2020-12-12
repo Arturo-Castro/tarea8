@@ -59,6 +59,8 @@ document.querySelector('#submit').onclick = function() {
     const nodeList = document.querySelectorAll('input');
     const arrayEdades = [];
     const arraySalarios = [];
+    let cantidadErrores = 0;
+
     for (let i = 0; i < numeroDePersonas; i++) {
         if (Number(nodeList[i].value) === 0) {
             continue;
@@ -75,6 +77,41 @@ document.querySelector('#submit').onclick = function() {
     document.querySelectorAll('#contenedor-texto p').forEach(function(p) {
         p.remove();
     })
+
+    document.querySelectorAll('#lista-errores li').forEach(function(li) {
+        li.remove();
+    })
+
+    document.querySelectorAll('#contenedor-edades input').forEach(function(input){
+        if (!/^[0-9]+$/.test(input.value)){
+            input.className = 'error';
+            document.querySelector('#contenedor-texto').className = 'oculto';
+            cantidadErrores++;
+            const $error = document.createElement('li');
+            $error.innerText = validarEdades(input.value);
+            document.querySelector('#lista-errores').appendChild($error);
+        }else{
+            input.className = '';
+        }
+    })
+
+
+    document.querySelectorAll('#contenedor-salarios input').forEach(function(input){
+        if (!/^[0-9]+$/.test(input.value)){
+            input.className = 'error';
+            document.querySelector('#contenedor-texto').className = 'oculto';
+            cantidadErrores++;
+            const $error = document.createElement('li');
+            $error.innerText = validarSalarios(input.value);
+            document.querySelector('#lista-errores').appendChild($error);
+        }else{
+            input.className = '';
+        }
+    })
+
+    if (cantidadErrores === 0){
+        document.querySelector('#contenedor-texto').className = '';
+    }
 
     const nodoContenedorTexto = document.querySelector('#contenedor-texto');
     const contenedorTextoParrafo = document.createElement('p');
