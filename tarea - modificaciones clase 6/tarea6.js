@@ -1,120 +1,163 @@
-function crearInput(){
+function crearInput() {
     return document.createElement('input');
 }
 
 
-function crearLabel(){
+function crearLabel() {
     return document.createElement('label');
 }
 
 
-function crearBr(){
+function crearBr() {
     return document.createElement('br');
 }
 
 
-function calcularPromedioArray(array){
+function calcularPromedioArray(array) {
     let suma = 0;
-    let promedio;
-    for(let i=0; i<array.length; i++){
+    for (let i = 0; i < array.length; i++) {
         suma += array[i];
-    }promedio = suma / array.length;
-    return promedio;
+    }
+    return suma / array.length; 
 }
 
 
-function obtenerMinimo(array){
-    let arrayMinimo = array[0];
-    for(let i=1; i<array.length; i++){
-        if (array[i] < arrayMinimo){
-            arrayMinimo = array[i];
-        }  
-    }return arrayMinimo;   
-    
-}
-
-
-function obtenerMaximo(array){
-    let arrayMaximo = array[0];
-    for(let i=1; i<array.length; i++){
-        if(array[i] > arrayMaximo){
-            arrayMaximo = array[i];
+function obtenerMinimo(array) {
+    let numeroMinimo = array[0];
+    for (let i = 1; i < array.length; i++) {
+        if (array[i] < numeroMinimo) {
+            numeroMinimo = array[i];
         }
-    }return arrayMaximo;
+    }
+    return numeroMinimo;
+
 }
 
-const cantidadDePersonas = Number(prompt('Cuantas personas son en tu grupo familiar?'));
-const nodoPagina1 = document.querySelector('#contenedor1');
 
-for(let i=1; i<=cantidadDePersonas; i++){
+function obtenerMaximo(array) {
+    let numeroMaximo = array[0];
+    for (let i = 1; i < array.length; i++) {
+        if (array[i] > numeroMaximo) {
+            numeroMaximo = array[i];
+        }
+    }
+    return numeroMaximo;
+}
+
+const numeroDePersonas = Number(prompt('Cuantas personas son en tu grupo familiar?'));
+const nodoContenedorEdades = document.querySelector('#contenedor-edades');
+
+for (let i = 1; i <= numeroDePersonas; i++) {
     const nuevoTexto = document.createTextNode('Miembro ' + i);
-    nodoPagina1.appendChild(crearLabel().appendChild(nuevoTexto));
-    nodoPagina1.appendChild(crearInput());
-    nodoPagina1.appendChild(crearBr());
+    nodoContenedorEdades.appendChild(crearLabel().appendChild(nuevoTexto));
+    nodoContenedorEdades.appendChild(crearInput());
+    nodoContenedorEdades.appendChild(crearBr());
 }
 
 
-document.querySelector('#submit').onclick = function(){
+document.querySelector('#submit').onclick = function() {
     const nodeList = document.querySelectorAll('input');
-    const array = [];
-    const array2 = [];
-    for(let i=0; i<cantidadDePersonas; i++){ //en vez de nodelist.length hacer cantidad de personas.length asi termina la iteracion ahi, dsp poner el resto en otra llista y hacer calculos con esa lista!!
-        if(Number(nodeList[i].value) === 0){
+    const arrayEdades = [];
+    const arraySalarios = [];
+    let cantidadErrores = 0;
+
+    for (let i = 0; i < numeroDePersonas; i++) {
+        if (Number(nodeList[i].value) === 0) {
             continue;
         }
-        array.push(Number(nodeList[i].value)); //ahora iterar con la otra mitad del array correspondiente a salarios
+        arrayEdades.push(Number(nodeList[i].value));
     }
-    for(let i=cantidadDePersonas; i<nodeList.length; i++){
-        if(Number(nodeList[i].value) === 0){
+    for (let i = numeroDePersonas; i < nodeList.length; i++) {
+        if (Number(nodeList[i].value) === 0) {
             continue
         }
-        array2.push(Number(nodeList[i].value));
+        arraySalarios.push(Number(nodeList[i].value));
     }
-    const nodoPagina2 = document.querySelector('#contenedor-texto');
-    const nuevoParrafo = document.createElement('p');
-    const nuevoEm = document.createElement('em');
-    const texto1 = document.createTextNode(`El promedio es ${calcularPromedioArray(array)}`);
-    const texto2 = document.createTextNode(`La edad minima es ${obtenerMinimo(array)}`);
-    const texto3 = document.createTextNode(`La edad maxima es ${obtenerMaximo(array)}`);
-    const texto4 = document.createTextNode(`El salario promedio es ${calcularPromedioArray(array2)}`);
-    const texto5 = document.createTextNode(`El salario minimo es ${obtenerMinimo(array2)}`);
-    const texto6 = document.createTextNode(`El salario maximo es ${obtenerMaximo(array2)}`);
-    const texto7 = document.createTextNode(`El salario mensual promedio es ${calcularPromedioArray(array2)/12}`);
-    nuevoEm.appendChild(texto1);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto2);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto3);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto4);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto5);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto6);
-    nuevoEm.appendChild(crearBr());
-    nuevoEm.appendChild(texto7);
-    nuevoParrafo.appendChild(nuevoEm);
-    nodoPagina2.appendChild(nuevoParrafo);
+
+    document.querySelectorAll('#contenedor-texto p').forEach(function(p) {
+        p.remove();
+    })
+
+    document.querySelectorAll('#lista-errores li').forEach(function(li) {
+        li.remove();
+    })
+
+    document.querySelectorAll('#contenedor-edades input').forEach(function(input){
+        if (!/^[0-9]+$/.test(input.value)){
+            input.className = 'error';
+            document.querySelector('#contenedor-texto').className = 'oculto';
+            cantidadErrores++;
+            const $error = document.createElement('li');
+            $error.innerText = validarEdades(input.value);
+            document.querySelector('#lista-errores').appendChild($error);
+        }else{
+            input.className = '';
+        }
+    })
+
+
+    document.querySelectorAll('#contenedor-salarios input').forEach(function(input){
+        if (!/^[0-9]+$/.test(input.value)){
+            input.className = 'error';
+            document.querySelector('#contenedor-texto').className = 'oculto';
+            cantidadErrores++;
+            const $error = document.createElement('li');
+            $error.innerText = validarSalarios(input.value);
+            document.querySelector('#lista-errores').appendChild($error);
+        }else{
+            input.className = '';
+        }
+    })
+
+    if (cantidadErrores === 0){
+        document.querySelector('#contenedor-texto').className = '';
+    }
+
+    const nodoContenedorTexto = document.querySelector('#contenedor-texto');
+    const contenedorTextoParrafo = document.createElement('p');
+    const contenedorTextoEm = document.createElement('em');
+    const textoPromedioEdades = document.createTextNode(`El promedio es ${calcularPromedioArray(arrayEdades)}`);
+    const textoEdadMinima = document.createTextNode(`La edad minima es ${obtenerMinimo(arrayEdades)}`);
+    const textoEdadMaxima = document.createTextNode(`La edad maxima es ${obtenerMaximo(arrayEdades)}`);
+    const textoSalarioPromedio = document.createTextNode(`El salario promedio es ${calcularPromedioArray(arraySalarios)}`);
+    const textoSalarioMinimo = document.createTextNode(`El salario minimo es ${obtenerMinimo(arraySalarios)}`);
+    const textoSalarioMaximo = document.createTextNode(`El salario maximo es ${obtenerMaximo(arraySalarios)}`);
+    const textoSalarioMensualPromedio = document.createTextNode(`El salario mensual promedio es ${calcularPromedioArray(arraySalarios)/12}`);
+    contenedorTextoEm.appendChild(textoPromedioEdades);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoEdadMinima);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoEdadMaxima);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoSalarioPromedio);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoSalarioMinimo);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoSalarioMaximo);
+    contenedorTextoEm.appendChild(crearBr());
+    contenedorTextoEm.appendChild(textoSalarioMensualPromedio);
+    contenedorTextoParrafo.appendChild(contenedorTextoEm);
+    nodoContenedorTexto.appendChild(contenedorTextoParrafo);
     return false;
 }
 
-document.querySelector('#agregar').onclick = function(){
-    const nodoPagina3 = document.querySelector('#contenedor2');
-    const nuevoTexto2 = document.createTextNode('Salario Anual');
-    nodoPagina3.appendChild(crearLabel().appendChild(nuevoTexto2));
-    nodoPagina3.appendChild(crearInput());
-    nodoPagina3.appendChild(crearBr());
+document.querySelector('#agregar').onclick = function() {
+    const nodoContenedorSalarios = document.querySelector('#contenedor-salarios');
+    const textoLabel = document.createTextNode('Salario Anual');
+    nodoContenedorSalarios.appendChild(crearLabel().appendChild(textoLabel));
+    nodoContenedorSalarios.appendChild(crearInput());
+    nodoContenedorSalarios.appendChild(crearBr());
     return false;
 }
 
 
 
-document.querySelector('#reset').onclick = function(){
+document.querySelector('#reset').onclick = function() {
     window.location.reload();
 }
 
-document.querySelector('#quitar').onclick = function(){
-    let contenedor2 = document.querySelector('#contenedor2')
-    contenedor2.textContent=''
+document.querySelector('#quitar').onclick = function() {
+    const nodoContenedorSalarios = document.querySelector('#contenedor-salarios')
+    nodoContenedorSalarios.textContent = ''
     return false;
 }
